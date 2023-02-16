@@ -22,13 +22,13 @@ Step 3: For AQI you'll need to install a [Purple Air Sensor driver](https://gith
 Setup
 -----
 
-Temperature:
+*Temperature*
 
- For the temperature mapper, you'll need to identify the nearest weather station.  This can be found by entering your location at [https://forecast.weather.gov/stations.php](https://forecast.weather.gov/stations.php).  The most recent time I checked searching by ZIP was broken, so I suggest sorting by State and finding your nearest station.  (My apologies to non-American users.  It should be possible to modify the code to your local weather service format.)
+ When configuring the app you need to identify the nearest weather station.  This can be found by entering your location at [https://forecast.weather.gov/stations.php](https://forecast.weather.gov/stations.php).  The most recent time I checked searching by ZIP was broken, so I suggest sorting by State and finding your nearest station.  (My apologies to non-American users.  It should be possible to modify the code to your local weather service format.)
 
  Alternatively, the code could be modified by using an input sensor using the AQI temperature mapper as a guide if needed.
 
-AQI:
+*AQI*
 
 For AQI identify your nearest Purple Air Sensor ID and configure the virtual sensor.  Then select that sensor as the input to the AQI color mapper.
 
