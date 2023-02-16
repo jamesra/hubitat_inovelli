@@ -33,7 +33,7 @@ import groovy.transform.Field
 #include colormap.inovelli.blue
  
 definition(
-    name: "InovelliBlue AQI Color Mapper",
+    name: "Inovelli Blue AQI Color Mapper",
     namespace: "Jamesan",
     author: "James Anderson",
     singleInstance: false,
@@ -117,7 +117,7 @@ def averageAQI() {
 @Field static def AQI_range_map = [
         default_background: 'white',
         colormap: [
-        [min: 0, max: 50, name: "Good", color: 'spring', no_background: true],
+        [min: 0, max: 50, name: "Good", color: 'green', no_background: true],
         [min: 50, max: 100, name: "Moderate", color: 'yellow'],
         [min: 100, max: 150, name: "Unhealthy for Sensitive Groups", color: 'orange'],
         [min: 150, max: 200, name: "Unhealthy", color: 'red'],
