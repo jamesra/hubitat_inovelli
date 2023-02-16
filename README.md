@@ -30,6 +30,8 @@ Setup
 
 *AQI*
 
-For AQI identify your nearest Purple Air Sensor ID and configure the virtual sensor.  Then select that sensor as the input to the AQI color mapper.
+Configure the virtual sensor For AQI identify [using the nearest Purple Air Sensor ID](https://map.purpleair.com/).  If you select a station, then select "Get this Widget" the station ID number is currently in several locations after the "PurpleAirWidget_" string.  (There is probably a better way to find it I haven't identified.)  Once the virtual sensor is configured select that sensor as the input to the AQI color mapper.
 
-In the future I may add a feature to dim the light brightness after sunset or between set hours or when the light is turned off.
+In the future I may add a feature to dim the light brightness after sunset or between set hours or when the light is turned off. 
+
+I've also debated adding barometer and indoor CO2 maps, but I don't own enough Blue switches. 
