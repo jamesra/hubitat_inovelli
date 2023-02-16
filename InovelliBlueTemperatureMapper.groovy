@@ -81,6 +81,7 @@ def mainPage() {
             
 			input "thisName", "text", title: "Name this Colormap", submitOnChange: true, required: true
             input "weather_url", "text", title: "Enter the weather.gov url for your local weather", required: true, defaultValue: "https://api.weather.gov/stations/<YOUR STATION HERE>"
+			paragraph "Locate your local weather station at https://forecast.weather.gov/stations.php"
             input "weather_email", "text", title: "E-mail to attach to weather.gov, per thier request, to contact folks who spam the service", required: true, defaultValue: "Jander42@hotmail.com"
             input "MaxBrightness", "number", title: "Maximum brightness of LED (0 - 100)", required: true, defaultValue: 66
             input "MinBrightness", "number", title: "Minimum brightness of LED (0 - 100)", required: true, defaultValue: 15
