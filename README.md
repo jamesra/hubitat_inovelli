@@ -59,6 +59,6 @@ Each entry in the map is a min/max range of values that is assigned a specific c
 
 The visual effect is that the light strip "fills up" as AQI worsens (gets higher).
 
-Temperature works the same way.  For the mid temperature each 1F change maps directly to a single LED change.  For the cold and warmer extremes each 2F change maps to a single LED.
+Temperature works the same way.  When close to room temperature each 1F change maps directly to a single LED change.  For the cold and warmer extremes each 2F change maps to a single LED.
 
-If you do not like the default choices of color or want to fine tune the ranges the app code can be editted to adjust the color map.
+If you do not like the default choices of color or want to fine tune the ranges the app code can be editted to adjust the color map.  To have a ranges map on whole number boundaries to Inovelli Blue LEDs one must use ranges divisible by 8.  (There are seven LEDs with eight possible states: off, 1, 2, 3, 4, 5, 6, 7)
