@@ -1,0 +1,145 @@
+/**
+ * ==========================  Inovelli Blue Level Indicator ==========================
+ *
+ *  DESCRIPTION:
+ *  Maps a single value to a colormap and sets a number of LEDs on the indicator bar
+ *  
+ 
+ *  TO INSTALL:
+ *  Paste this code into a user app
+ *
+ *  Copyright 2021 James Anderson
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing permissions and limitations under the License.
+ *
+ * =======================================================================================
+ *
+ *  Last modified: Feb-05-23
+ * 
+ *  Changelog:
+ * 
+ *  v1.0 - Initial Public Release
+ *
+ */ 
+
+import groovy.transform.Field
+#include colormap.shared
+#include colormap.inovelli.blue
+ 
+definition(
+    name: "InovelliBlue AQI Color Mapper",
+    namespace: "Jamesan",
+    author: "James Anderson",
+    singleInstance: false,
+    description: "Map device values to a LED strip",
+    category: "Convenience",
+    iconUrl: "",
+    iconX2Url: "",
+    iconX3Url: ""
+)    
+
+@Field static Random random = new Random()
+
+preferences {
+	page(name: "mainPage")
+}
+
+def mainPage() {
+	dynamicPage(name: "mainPage", title: " ", install: true, uninstall: true) {
+		section {
+            avg = averageAQI()
+            
+			input "thisName", "text", title: "Name this Colormap", submitOnChange: true, required: true
+			if(thisName) app.updateLabel("$thisName")
+			input "inputSensor", "capability.sensor", title: "Select AQI Input", submitOnChange: true, required: true, multiple: false
+            if(inputSensor) {
+                paragraph "Current average AQI is ${averageAQI()}"
+                def range = ValueToRange(averageAQI(), AQI_range_map)
+                paragraph "Current AQI color is ${range.name}"
+            }
+            input "outputLights", "device.InovelliDimmer2-in-1BlueSeriesVZM31-SN", title: "Select Output", submitOnChange: true, required: true, multiple: true 
+            input "MaxBrightness", "number", title: "Maximum brightness of LED (0 - 100)", required: true, defaultValue: 66
+            input "MinBrightness", "number", title: "Minimum brightness of LED (0 - 100)", required: true, defaultValue: 15
+            
+		    if(outputLights)
+            {
+                log.info "Initial start"
+                refresh()
+            }
+        } 
+	}
+}
+
+
+def installed() {
+	initialize()
+}
+
+def updated() {
+	unsubscribe()
+	initialize()
+}
+
+def initialize() { 
+    if(inputSensor) {
+        subscribe(inputSensor, "aqi", handler)
+        runEvery1Minute(handler)
+    }
+}
+
+
+
+def averageAQI() {
+    //return 0
+    //return 28
+    //int value = random.nextInt(5) * 10
+    //log.debug("Random AQI ${value}")
+    //return value
+    return inputSensor.currentValue("aqi")
+    /*
+	def total = 0.0
+	def n = inputSensors.size()
+    if(n <= 0) return -1
+	inputSensors.each {total += it.airQuality}
+	return (total / n).toDouble().round(1)
+*/
+}
+
+@Field static int numLEDs = 7
+  
+// From https://www.airnow.gov/aqi/aqi-basics/
+@Field static def AQI_range_map = [
+        default_background: 'white',
+        colormap: [
+        [min: 0, max: 50, name: "Good", color: 'spring', no_background: true],
+        [min: 50, max: 100, name: "Moderate", color: 'yellow'],
+        [min: 100, max: 150, name: "Unhealthy for Sensitive Groups", color: 'orange'],
+        [min: 150, max: 200, name: "Unhealthy", color: 'red'],
+        [min: 200, max: 300, name: "Very Unhealthy", color: 'purple'],
+        [min: 300, max: 400, name: "Hazardous", color: 'magenta'],
+    ]
+] 
+
+def handler(evt) {
+	refresh()
+}
+
+def refresh(){
+    //def averageDev = getChildDevice("AQIColorMap_${app.id}")
+	def avg = averageAQI() 
+    //log.info "Average AQI = $avg"
+    def range = ValueToRange(avg, AQI_range_map)
+    def result = GetLEDSettings(avg, range, MinBrightness, MaxBrightness)
+	//averageDev.setAirQuality(avg) 
+    //def c = AQIToColor(avg)
+    //log.info "AQI Color = $c"
+    //def result = AQIToLedSettings(avg) 
+    UpdateLights(result, outputLights, MinBrightness, MaxBrightness)
+}
+   
