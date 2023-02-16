@@ -35,3 +35,14 @@ Configure the virtual sensor For AQI identify [using the nearest Purple Air Sens
 In the future I may add a feature to dim the light brightness after sunset or between set hours or when the light is turned off. 
 
 I've also debated adding barometer and indoor CO2 maps, but I don't own enough Blue switches. 
+
+How colors are mapped
+---------------------
+
+The apps define a color map that is sent to the libraries.  Each entry in the map is a min/max range of values that is assigned a specific color.  The LED display is painted by lighting the LED's from the bottom to top with the range color according to where the value falls within the range.  The background color is the range below the current range.  In other words, the "Green" AQI range is 0 to 50.  The "Yellow" AQI range is 50 to 100.  If the AQI reading is 75, the bottom half of the display will be painted yellow.  The top half will be painted green, as that is the range below yellow.
+
+The visual effect is that the range "fills up" as AQI worsens (gets higher).
+
+Temperature works the same way.  For the mid temperature each 1F change maps directly to a single LED change.  For the cold and warmer extremes each 2F change maps to a single LED. 
+
+If you do not like the default choices of color or want to fine tune the ranges the app code can be editted to adjust the color map.
