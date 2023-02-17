@@ -46,27 +46,34 @@ definition(
 
 @Field static int numLEDs = 7
 
-//18 - 32
-//32 - 46,
-//46 - 60,
-//60 - 67,
-//67 - 74
-//74 - 81
-//81 - 88,
-//88 - 102
+//There are 7 LEDs, so 8 possible states: off, 1, 2, 3, 4, 5, 6, 7
+//Temperatures ranges are either 8 or 16 degrees wide to map values 1F to 1 LED or 2F to 1 LED. 
+//Because of how the temperatures space out I use 16 for the most extreme temps, 12 for the shoulder temps,
+//and then 8 for temperatures closer to room temp.
+//My thinking is that if one is wearing winter clothes 28 degrees is hard to tell from 32 degrees, but 
+//68 degrees is noticable from 72 degrees when you are wearing shorts and t-shirt.   
+//to LEDs. 
+//16 - 32,   16F range
+//32 - 44,   12F range
+//44 - 56,   8F range
+//56 - 68,   8F range
+//68 - 76,   8F range
+//76 - 84,   8F range
+//84 - 92,   8F range
+//92 - 104, 12F range
   
 // From https://www.airnow.gov/aqi/aqi-basics/
 @Field static def temp_range_map = [
         default_background: 'purple',
         colormap: [
-        [min: 20, max: 32, name: "Freezing", color: 'white', no_background: true],
-        [min: 32, max: 46, name: "Cold", color: 'blue'],
-        [min: 46, max: 60, name: "Chilly", color: 135],
-        [min: 60, max: 68, name: "Mild chill", color: 110],
-        [min: 68, max: 75, name: "Comfortable", color: 'green'],
-        [min: 75, max: 82, name: "Warm", color: 'yellow'],
-        [min: 82, max: 89, name: "Too Warm", color: 'orange'],
-        [min: 89, max: 102, name: "Hot", color: 'red'],
+        [min: 16, max: 32, name: "Freezing", color: 'white', no_background: true],
+        [min: 32, max: 44, name: "Cold", color: 'blue'],
+        [min: 44, max: 56, name: "Chilly", color: 135],
+        [min: 56, max: 68, name: "Mild chill", color: 110],
+        [min: 68, max: 76, name: "Comfortable", color: 'green'],
+        [min: 76, max: 84, name: "Warm", color: 'yellow'],
+        [min: 84, max: 92, name: "Too Warm", color: 'orange'],
+        [min: 92, max: 104, name: "Hot", color: 'red'],
     ]
 ] 
 
@@ -81,15 +88,15 @@ def mainPage() {
             
 			input "thisName", "text", title: "Name this Colormap", submitOnChange: true, required: true
             input "weather_url", "text", title: "Enter the weather.gov url for your local weather", required: true, defaultValue: "https://api.weather.gov/stations/KCVO/observations/latest"
-            paragraph "Locate your local weather station at https://forecast.weather.gov/stations.php"
-            input "weather_email", "text", title: "E-mail to attach to weather.gov, per thier request, to contact folks who spam the service", required: true, defaultValue: ""
+            paragraph "Locate your local weather station at https://forecast.weather.gov/stations.php."
+            paragraph "The format for the URL is 'https://api.weather.gov/stations/STATION/observations/latest' replacing STATION with your local station name."
+            input "weather_email", "text", title: "E-mail to attach to weather.gov, per their request, to contact folks who spam the service", required: true, defaultValue: "Jander42@hotmail.com"
             input "MaxBrightness", "number", title: "Maximum brightness of LED (0 - 100)", required: true, defaultValue: 66
             input "MinBrightness", "number", title: "Minimum brightness of LED (0 - 100)", required: true, defaultValue: 15
 			if(thisName) app.updateLabel("$thisName")
 			 if(weather_url && weather_email) {
                 read_temperature()
                 paragraph "Current outside temperature is ${currentTemperature}"
-                //paragraph "Current AQI color is ${ValueToLEDSettings(avg)}"
             }
             input "outputLights", "device.InovelliDimmer2-in-1BlueSeriesVZM31-SN", title: "Select Output", submitOnChange: true, required: true, multiple: true  
         } 
